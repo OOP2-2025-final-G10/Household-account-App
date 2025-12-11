@@ -1,16 +1,40 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>注文管理システム</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='base-style.css') }}">
-</head>
-<body>
-    <h1>注文管理システム</h1>
-    <ul>
-      <li><a href="{{ url_for('user.list') }}">ユーザー（顧客）</a></li>
-      <li><a href="{{ url_for('product.list') }}">製品</a></li>
-      <li><a href="{{ url_for('order.list') }}">注文</a></li>
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}トップページ - 家計簿アプリ{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">家計簿管理システム</h1>
+        <p class="col-md-8 fs-4 mx-auto">
+            日々の収支を簡単に記録・管理できるアプリケーションです。<br>
+            まずはユーザー登録と費目の設定から始めましょう。
+        </p>
+        <a href="{{ url_for('user.add') }}" class="btn btn-primary btn-lg">記録を始める</a>
+    </div>
+</div>
+
+<div class="row align-items-md-stretch">
+    <div class="col-md-4">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>ユーザー管理</h2>
+            <p>家計簿を利用するメンバーを登録・編集します。</p>
+            <a href="{{ url_for('user.list') }}" class="btn btn-outline-light">一覧へ</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>費目管理</h2>
+            <p>食費、交通費などのカテゴリーを設定します。</p>
+            <a href="#" class="btn btn-outline-secondary">一覧へ</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="h-100 p-5 text-white bg-success rounded-3">
+            <h2>家計簿記録</h2>
+            <p>日々の収入と支出を入力します。</p>
+            <a href="#" class="btn btn-outline-light">入力へ</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
