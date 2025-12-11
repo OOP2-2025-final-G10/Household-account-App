@@ -16,11 +16,9 @@ def list():
 
 @user_bp.route('/add', methods=['GET', 'POST'])
 def add():
-    
     if request.method == 'POST':
         name = request.form['name']
-        age = request.form['age']
-        User.create(name=name, age=age)
+        User.create(name=name)
         return redirect(url_for('user.list'))
     
     return render_template('user_add.html')
@@ -34,7 +32,6 @@ def edit(user_id):
 
     if request.method == 'POST':
         user.name = request.form['name']
-        user.age = request.form['age']
         user.save()
         return redirect(url_for('user.list'))
 
