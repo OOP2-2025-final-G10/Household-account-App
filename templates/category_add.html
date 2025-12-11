@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>カテゴリー追加</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='base-style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>新しい費目・カテゴリーを追加</h1>
+    <ul class="breadcrumb">
+      <li><a href="{{ url_for('index') }}">HOME</a></li>
+      <li>
+        <a href="{{ url_for('category.category_list') }}"
+          >費目・カテゴリー一覧</a
+        >
+      </li>
+      <li>新規カテゴリー</li>
+    </ul>
+
+    <form action="{{ url_for('category.category_form') }}" method="post">
+      <label>費目名: <input type="text" name="name" required /></label><br />
+
+      <label>
+        収支区分:
+        <select name="type" required>
+          <option value="0" selected>支出 (0)</option>
+          <option value="1">収入 (1)</option>
+        </select> </label
+      ><br />
+
+      <label
+        >予算/目標額:
+        <input type="number" step="1" name="budget" value="0" required /></label
+      ><br />
+
+      <button type="submit">追加</button>
+    </form>
+  </body>
+</html>

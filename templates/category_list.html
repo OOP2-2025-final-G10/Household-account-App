@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>費目・カテゴリー一覧</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='base-style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>費目・カテゴリー一覧</h1>
+    <ul class="breadcrumb">
+      <li><a href="{{ url_for('index') }}">HOME</a></li>
+      <li>
+        <a href="{{ url_for('category.category_list') }}"
+          >費目・カテゴリー一覧</a
+        >
+      </li>
+    </ul>
+
+    <a href="{{ url_for('category.category_form') }}">新規カテゴリー追加</a>
+
+    <table>
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>費目名</th>
+          <th>収支区分</th>
+          <th>予算/目標額</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in categories %}
+        <tr>
+          <td>
+            <a
+              href="{{ url_for('category.category_form', category_id=category.id) }}"
+              >編集</a
+            >
+          </td>
+          <td>{{ category.name }}</td>
+
+          <td>{% if category.type == 1 %} 収入 {% else %} 支出 {% endif %}</td>
+
+          <td>{{ category.budget }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

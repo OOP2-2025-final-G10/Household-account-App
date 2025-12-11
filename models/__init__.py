@@ -1,18 +1,14 @@
-from peewee import SqliteDatabase
-from .db import db
+# models/__init__.py
+
+from .db import database
 from .user import User
-from .product import Product
+# from .product import Product # 元のProductの行は削除またはコメントアウト
+from .category import Category # Categoryのインポートを追加
 from .order import Order
 
-# モデルのリストを定義しておくと、後でまとめて登録しやすくなります
+# すべてのモデルのリストを定義
 MODELS = [
     User,
-    Product,
-    Order,
+    Category, # Categoryに変更
+    Order
 ]
-
-# データベースの初期化関数
-def initialize_database():
-    db.connect()
-    db.create_tables(MODELS, safe=True)
-    db.close()
