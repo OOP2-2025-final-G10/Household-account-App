@@ -5,7 +5,7 @@ from .category import Category
 import datetime as dt
 
 class Record(Model):
-    user = ForeignKeyField(User, backref='orders')
+    user = ForeignKeyField(User, backref='user')
     category = ForeignKeyField(Category, backref='category')
     price = ForeignKeyField(int, backref='price')
     date = DateTimeField(default=dt.datetime.now)
