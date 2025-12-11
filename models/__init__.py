@@ -1,23 +1,18 @@
-# models/__init__.py
+# models/__init__.py (衝突を解決した後)
 
 # 他のモデルをインポート
 from .user import User
-from .product import Product # サンプルアプリのProductはCategoryに置き換えられますが、
-                            # ひとまず全て残しておき、後でCategoryに差し替えます。
+from .product import Product 
 from .order import Order
 
 # Categoryモデルをインポート
-from .category import Category # <-- この行を追加
-
-# db.pyからdatabaseオブジェクトをインポート
-from .db import database
+from .category import Category 
 
 # データベースにテーブルを作成するモデルをリスト化
-# Categoryモデルも追加します
 MODELS = [
     User,
-    Product, # (Categoryへの変更を想定して、一旦残します)
-    Category, # <-- この行を追加
+    Product,
+    Category, # <-- あなたの変更を統合
     Order,
 ]
 

@@ -11,15 +11,23 @@
   <body>
     <h1>家計簿システム</h1>
     <ul>
-      <li><a href="{{ url_for('user.user_list') }}">使用者（User）</a></li>
-
-      <li>
-        <a href="{{ url_for('category.category_list') }}">費目・カテゴリー</a>
-      </li>
-
-      <li>
-        <a href="{{ url_for('order.order_list') }}">家計簿記録（Order）</a>
-      </li>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('user.user_list') }}"
+            >ユーザー一覧</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('category.category_list') }}"
+            >費目一覧</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('order.order_list') }}"
+            >記録一覧</a
+          >
+        </li>
+      </ul>
     </ul>
   </body>
 </html>
