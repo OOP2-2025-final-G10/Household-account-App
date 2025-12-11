@@ -1,14 +1,29 @@
 # models/__init__.py
 
-from .db import database
+# 他のモデルをインポート
 from .user import User
-# from .product import Product # 元のProductの行は削除またはコメントアウト
-from .category import Category # Categoryのインポートを追加
+from .product import Product # サンプルアプリのProductはCategoryに置き換えられますが、
+                            # ひとまず全て残しておき、後でCategoryに差し替えます。
 from .order import Order
 
-# すべてのモデルのリストを定義
+# Categoryモデルをインポート
+from .category import Category # <-- この行を追加
+
+# db.pyからdatabaseオブジェクトをインポート
+from .db import database
+
+# データベースにテーブルを作成するモデルをリスト化
+# Categoryモデルも追加します
 MODELS = [
     User,
-    Category, # Categoryに変更
-    Order
+    Product, # (Categoryへの変更を想定して、一旦残します)
+    Category, # <-- この行を追加
+    Order,
 ]
+
+def init_database():
+    """ データベースを初期化し、テーブルが存在しない場合は作成する """
+    database.connect()
+    # MODELSリスト内のすべてのテーブルを作成（既に存在する場合はスキップ）
+    database.create_tables(MODELS) 
+    database.close()

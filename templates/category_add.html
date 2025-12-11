@@ -1,42 +1,59 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>カテゴリー追加</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='base-style.css') }}"
-    />
-  </head>
-  <body>
-    <h1>新しい費目・カテゴリーを追加</h1>
-    <ul class="breadcrumb">
-      <li><a href="{{ url_for('index') }}">HOME</a></li>
-      <li>
-        <a href="{{ url_for('category.category_list') }}"
-          >費目・カテゴリー一覧</a
-        >
-      </li>
-      <li>新規カテゴリー</li>
-    </ul>
+{% extends "index.html" %} {% block content %}
+<div class="container">
+  <h2>{{ title }}</h2>
+  <p><a href="{{ url_for('category.category_list') }}">費目一覧へ戻る</a></p>
 
-    <form action="{{ url_for('category.category_form') }}" method="post">
-      <label>費目名: <input type="text" name="name" required /></label><br />
+  {% if message %}
+  <div class="alert alert-danger">{{ message }}</div>
+  {% endif %}
 
-      <label>
-        収支区分:
-        <select name="type" required>
-          <option value="0" selected>支出 (0)</option>
-          <option value="1">収入 (1)</option>
-        </select> </label
-      ><br />
+  <form method="POST" action="{{ url_for('category.category_add') }}">
+    <div class="form-group">
+      <label for="name">費目名 (例: 食費, 給料)</label>
+      <input type="text" id="name" name="name" class="form-control" required />
+    </div>
 
-      <label
-        >予算/目標額:
-        <input type="number" step="1" name="budget" value="0" required /></label
-      ><br />
+    <div class="form-group">
+      <label>収支区分</label>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="classification"
+          id="expense"
+          value="0"
+          checked
+        />
+        <label class="form-check-label" for="expense">支出 (0)</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="classification"
+          id="income"
+          value="1"
+        />
+        <label class="form-check-label" for="income">収入 (1)</label>
+      </div>
+    </div>
 
-      <button type="submit">追加</button>
-    </form>
-  </body>
-</html>
+    <div class="form-group">
+      <label for="target_amount">予算/目標額 (円)</label>
+      <input
+        type="number"
+        id="target_amount"
+        name="target_amount"
+        class="form-control"
+        value="0"
+        min="0"
+      />
+      <small class="form-text text-muted"
+        >食費なら予算、給与なら目標額などを設定します。</small
+      >
+    </div>
+
+    <button type="submit" class="btn btn-primary">登録</button>
+  </form>
+</div>
+{% endblock %}

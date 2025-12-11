@@ -1,52 +1,58 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>費目・カテゴリー一覧</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='base-style.css') }}"
-    />
-  </head>
-  <body>
-    <h1>費目・カテゴリー一覧</h1>
-    <ul class="breadcrumb">
-      <li><a href="{{ url_for('index') }}">HOME</a></li>
-      <li>
-        <a href="{{ url_for('category.category_list') }}"
-          >費目・カテゴリー一覧</a
-        >
-      </li>
-    </ul>
+{% extends "index.html" %} {% block content %}
+<div class="container">
+  <h2>{{ title }}</h2>
 
-    <a href="{{ url_for('category.category_form') }}">新規カテゴリー追加</a>
+  <p>
+    <a href="{{ url_for('category.category_add') }}" class="btn btn-primary"
+      >新しい費目を登録</a
+    >
+  </p>
 
-    <table>
-      <thead>
-        <tr>
-          <th>&nbsp;</th>
-          <th>費目名</th>
-          <th>収支区分</th>
-          <th>予算/目標額</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for category in categories %}
-        <tr>
-          <td>
-            <a
-              href="{{ url_for('category.category_form', category_id=category.id) }}"
-              >編集</a
-            >
-          </td>
-          <td>{{ category.name }}</td>
-
-          <td>{% if category.type == 1 %} 収入 {% else %} 支出 {% endif %}</td>
-
-          <td>{{ category.budget }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </body>
-</html>
+  {% if categories %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>費目名</th>
+        <th>収支区分</th>
+        <th>目標額 (月)</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+      <tr>
+        <td>{{ category.id }}</td>
+        <td>{{ category.name }}</td>
+        <td>
+          {% if category.classification == 1 %}
+          <span class="income">収入</span>
+          {% else %}
+          <span class="expense">支出</span>
+          {% endif %}
+        </td>
+        <td>{{ category.target_amount | int }} 円</td>
+        <td>
+          <a
+            href="{{ url_for('category.category_edit', category_id=category.id) }}"
+            class="btn btn-sm btn-info"
+            >編集</a
+          >
+          <form
+            method="POST"
+            action="{{ url_for('category.category_delete', category_id=category.id) }}"
+            style="display: inline"
+            onsubmit="return confirm('{{ category.name }} を本当に削除しますか？');"
+          >
+            <button type="submit" class="btn btn-sm btn-danger">削除</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>費目はまだ登録されていません。</p>
+  {% endif %}
+</div>
+{% endblock %}
