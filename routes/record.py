@@ -9,7 +9,7 @@ order_bp = Blueprint('record', __name__, url_prefix='/records')
 @order_bp.route('/')
 def list():
     record = Record.select()
-    return render_template('order_list.html', title='注文一覧', items=record)
+    return render_template('record_list.html', title='記録一覧', items=record)
 
 
 @order_bp.route('/add', methods=['GET', 'POST'])
@@ -32,7 +32,7 @@ def add():
 def edit(record_id):
     record = Record.get_or_none(Record.id == record_id)
     if not record:
-        return redirect(url_for('order.list'))
+        return redirect(url_for('record.list'))
 
     if request.method == 'POST':
         record.user_id = request.form['user_id']

@@ -11,7 +11,7 @@ product_bp = Blueprint('category', __name__, url_prefix='/categories')
 def list():
 
     category = Category.select()
-    return render_template('product_list.html', title='カテゴリー一覧', items=category)
+    return render_template('category_list.html', title='カテゴリー一覧', items=category)
 
 
 
