@@ -23,14 +23,17 @@ def add():
         Record.create(user=user_id, category=category_id, price=price, date=date, memo=memo)
         return redirect(url_for('record.list'))
     
-    users = Record.select()
+    # 【修正箇所1】以前は Record.select() になっていました。User.select() に直します。
+    users = User.select()
     categories = Category.select()
     return render_template('record_add.html', users=users, categories=categories)
 
 
+# 【修正箇所2】URL変数の <int:order_id> に合わせて、関数の引数も order_id に統一しました
 @order_bp.route('/edit/<int:order_id>', methods=['GET', 'POST'])
-def edit(record_id):
-    record = Record.get_or_none(Record.id == record_id)
+def edit(order_id):
+    # 引数に合わせて order_id で検索するように修正
+    record = Record.get_or_none(Record.id == order_id)
     if not record:
         return redirect(url_for('record.list'))
 
