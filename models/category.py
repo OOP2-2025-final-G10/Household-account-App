@@ -1,9 +1,10 @@
-from peewee import Model, CharField, DecimalField
+from peewee import Model, CharField, BooleanField
 from .db import db
 
-class Product(Model):
+
+class Category(Model):
     name = CharField()
-    price = DecimalField()
+    classification = BooleanField()
 
     class Meta:
         database = db

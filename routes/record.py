@@ -1,43 +1,48 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from models import Order, User, Product
+from models import User, Record, Category
 from datetime import datetime
 
 # Blueprintの作成
-order_bp = Blueprint('order', __name__, url_prefix='/orders')
+order_bp = Blueprint('record', __name__, url_prefix='/records')
 
 
 @order_bp.route('/')
 def list():
-    orders = Order.select()
-    return render_template('order_list.html', title='注文一覧', items=orders)
+    record = Record.select()
+    return render_template('order_list.html', title='注文一覧', items=record)
 
 
 @order_bp.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
         user_id = request.form['user_id']
-        product_id = request.form['product_id']
-        order_date = datetime.now()
-        Order.create(user=user_id, product=product_id, order_date=order_date)
-        return redirect(url_for('order.list'))
+        category_id = request.form['category_id']
+        price = request.form['price']
+        date = datetime.now()
+        memo = request.form['memo']
+        Record.create(user=user_id, category=category_id, price=price, date=date, memo=memo)
+        return redirect(url_for('record.list'))
     
-    users = User.select()
-    products = Product.select()
-    return render_template('order_add.html', users=users, products=products)
+    users = Record.select()
+    categories = Category.select()
+    return render_template('record_add.html', users=users, categories=categories)
 
 
 @order_bp.route('/edit/<int:order_id>', methods=['GET', 'POST'])
-def edit(order_id):
-    order = Order.get_or_none(Order.id == order_id)
-    if not order:
+def edit(record_id):
+    record = Record.get_or_none(Record.id == record_id)
+    if not record:
         return redirect(url_for('order.list'))
 
     if request.method == 'POST':
-        order.user = request.form['user_id']
-        order.product = request.form['product_id']
-        order.save()
-        return redirect(url_for('order.list'))
+        record.user_id = request.form['user_id']
+        record.category_id = request.form['category_id']
+        record.price = request.form['price']
+        record.date = datetime.now()
+        record.memo = request.form['memo']
+        record.save()
+        return redirect(url_for('record.list'))
 
     users = User.select()
-    products = Product.select()
-    return render_template('order_edit.html', order=order, users=users, products=products)
+    categories = Category.select()
+    return render_template('record_edit.html', record=record, users=users, categories=categories)
