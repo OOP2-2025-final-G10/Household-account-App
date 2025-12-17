@@ -2,20 +2,25 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>製品追加</title>
+    <title>費目追加</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='base-style.css') }}">
 </head>
 <body>
-    <h1>新しい製品を追加</h1>
+    <h1>新しい費目を追加</h1>
     <ul class="breadcrumb">
         <li><a href="{{ url_for('index') }}">HOME</a></li>
-        <li><a href="{{ url_for('category.list') }}">製品一覧</a></li>
-        <li>新規製品</li>
+        <li><a href="{{ url_for('category.list') }}">費目一覧</a></li>
+        <li>新規費目</li>
     </ul>
 
     <form action="{{ url_for('category.add') }}" method="post">
-        <label>製品名: <input type="text" name="name" required></label><br>
-        <label>価格: <input type="number" step="1" name="price" required></label><br>
+        <label>費目名: <input type="text" name="name" required placeholder="例: 食費"></label><br>
+        
+        <p>収支区分:</p>
+        <label><input type="radio" name="classfication" value="0" checked> 支出</label>
+        <label><input type="radio" name="classfication" value="1"> 収入</label>
+        <br><br>
+        
         <button type="submit">追加</button>
     </form>
 </body>

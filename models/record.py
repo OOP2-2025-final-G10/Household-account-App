@@ -12,4 +12,6 @@ class Record(Model):
     memo = TextField(null=True)
 
     class Meta:
+
         database = db
+
