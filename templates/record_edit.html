@@ -2,15 +2,15 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>注文編集</title>
+    <title>記録編集</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='base-style.css') }}">
 </head>
 <body>
-    <h1>注文を編集</h1>
+    <h1>記録を編集</h1>
     <ul class="breadcrumb">
         <li><a href="{{ url_for('index') }}">HOME</a></li>
-        <li><a href="{{ url_for('record.list') }}">注文一覧</a></li>
-        <li>注文の編集</li>
+        <li><a href="{{ url_for('record.list') }}">記録一覧</a></li>
+        <li>記録編集</li>
     </ul>
 
     <form action="{{ url_for('record.edit', record_id=record.id) }}" method="post">
@@ -21,13 +21,18 @@
                 {% endfor %}
             </select>
         </label><br>
-        <label>製品: 
+        
+        <label>費目: 
             <select name="category_id" required>
-                {% for category in categorys %}
+                {% for category in categories %}
                     <option value="{{ category.id }}" {% if record.category.id == category.id %}selected{% endif %}>{{ category.name }}</option>
                 {% endfor %}
             </select>
         </label><br>
+        
+        <label>価格: <input type="number" name="price" value="{{ record.price }}" required></label><br>
+        <label>メモ: <input type="text" name="memo" value="{{ record.memo }}"></label><br>
+        
         <button type="submit">保存</button>
     </form>
 </body>
