@@ -18,7 +18,6 @@
             <tr>
                 <th>&nbsp;</th>
                 <th>費目名</th>
-                <th>価格</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +25,6 @@
             <tr>
                 <td><a href="{{ url_for('category.edit', category_id=category.id) }}">編集</a></td>
                 <td>{{ category.name }}</td>
-                <td>{{ category.price }}</td>
             </tr>
             {% endfor %}
         </tbody>
