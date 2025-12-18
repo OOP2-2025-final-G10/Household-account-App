@@ -1,9 +1,9 @@
 :root {
   font-size: 14pt;
-  --blue: #1565c0;
-  --light-blue: #d9edfb;
-  --very-light-blue: #eef7ff;
-  --border: #b4dbfa;
+  --green: #2e7d32;
+  --light-green: #e8f5e9;
+  --very-light-green: #f1f8f4;
+  --border: #c8e6c9;
 }
 
 body {
@@ -14,7 +14,7 @@ body {
 
 table {
   width: 100%;
-  border-collapse:collapse;
+  border-collapse: collapse;
   margin-bottom: 2rem;
   background-color: #ffffff;
 }
@@ -26,20 +26,20 @@ th, td {
 }
 
 th {
-  background-color: var(--light-blue);
-  color: var(--blue);
+  background-color: #faedac; 
+  color: var(--green);           
   font-weight: bold;
 }
 
 tr:nth-child(even) td {
-  background-color: var(--very-light-blue);
+  background-color: var(--very-light-green);
 }
 
 .breadcrumb {
   padding: 0;
   margin-bottom: 2rem;
   list-style: none;
-  color: var(--blue);
+  color: var(--green);
 }
 
 .breadcrumb li {
@@ -57,5 +57,5 @@ tr:nth-child(even) td {
 }
 
 .breadcrumb li:last-child {
-  color: #0d47a1; /* 濃い青で現在地を強調 */
+  color: #378837; 
 }
