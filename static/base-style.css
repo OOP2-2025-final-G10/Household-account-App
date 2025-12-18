@@ -6,11 +6,24 @@
   --border: #c8e6c9;
 }
 
-body {
+/*body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #ffffff;
   color: #2e2e2e;
+}*/
+html, body {
+  height: 100%;
+  margin: 0;
 }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #aaf582, #fff9db);
+  color: #2e2e2e;
+}
+
+
 
 table {
   width: 100%;
