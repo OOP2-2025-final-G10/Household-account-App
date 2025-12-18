@@ -34,10 +34,10 @@ def add():
 
 
 # HTMLのURL指定に合わせて <int:product_id> を受け取るように修正
-@product_bp.route('/edit/<int:product_id>', methods=['GET', 'POST'])
-def edit(product_id):
-    # 受け取った product_id を使ってデータを取得
-    category = Category.get_or_none(Category.id == product_id)
+@product_bp.route('/edit/<int:category_id>', methods=['GET', 'POST'])
+def edit(category_id):
+    # 受け取った category_id を使ってデータを取得
+    category = Category.get_or_none(Category.id == category_id)
     if not category:
         return redirect(url_for('category.list'))
 
