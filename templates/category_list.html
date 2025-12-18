@@ -24,7 +24,7 @@
         <tbody>
             {% for category in items %}
             <tr>
-                <td><a href="{{ url_for('category.edit', product_id=category.id) }}">編集</a></td>
+                <td><a href="{{ url_for('category.edit', category_id=category.id) }}">編集</a></td>
                 <td>{{ category.name }}</td>
                 <td>{{ category.price }}</td>
             </tr>

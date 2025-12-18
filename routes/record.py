@@ -3,16 +3,16 @@ from models import User, Record, Category
 from datetime import datetime
 
 # Blueprintの作成
-order_bp = Blueprint('record', __name__, url_prefix='/records')
+record_bp = Blueprint('record', __name__, url_prefix='/records')
 
 
-@order_bp.route('/')
+@record_bp.route('/')
 def list():
     record = Record.select()
     return render_template('record_list.html', title='記録一覧', items=record)
 
 
-@order_bp.route('/add', methods=['GET', 'POST'])
+@record_bp.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
         user_id = request.form['user_id']
@@ -30,10 +30,10 @@ def add():
 
 
 # 【修正箇所2】URL変数の <int:order_id> に合わせて、関数の引数も order_id に統一しました
-@order_bp.route('/edit/<int:order_id>', methods=['GET', 'POST'])
-def edit(order_id):
+@record_bp.route('/edit/<int:record_id>', methods=['GET', 'POST'])
+def edit(record_id):
     # 引数に合わせて order_id で検索するように修正
-    record = Record.get_or_none(Record.id == order_id)
+    record = Record.get_or_none(Record.id == record_id)
     if not record:
         return redirect(url_for('record.list'))
 
