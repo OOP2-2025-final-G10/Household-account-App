@@ -1,9 +1,10 @@
-from peewee import Model, CharField, ForeignKeyField
+from peewee import Model, CharField, BooleanField
 from .db import db
+
 
 class Category(Model):
     name = CharField()
-    classfication = ForeignKeyField(bool, backref='classification')
+    classification = BooleanField()
 
     class Meta:
         database = db
