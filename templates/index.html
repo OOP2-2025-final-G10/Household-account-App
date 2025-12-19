@@ -59,7 +59,6 @@
         border-top: 2px solid #eee;
         padding-top: 20px;
       }
-      /* ナビゲーションの横並びスタイル */
       .navbar-nav {
         list-style: none;
         padding: 0;
@@ -118,7 +117,7 @@
       </div>
 
       <div class="chart-box bar-section" style="width: 100%">
-        <h2>全ユーザー支出比較</h2>
+        <h2>全ユーザー支出収入比較</h2>
         <canvas id="userBarChart"></canvas>
       </div>
     </div>
@@ -148,6 +147,7 @@
       const incomeLabels = ["給与", "賞与", "副業", "臨時収入"];
 
       window.onload = function () {
+        // 支出円グラフ
         expenseChart = new Chart(document.getElementById("expensePieChart"), {
           type: "pie",
           data: {
@@ -168,6 +168,7 @@
           options: { responsive: true, maintainAspectRatio: false },
         });
 
+        // 収入円グラフ
         incomeChart = new Chart(document.getElementById("incomePieChart"), {
           type: "pie",
           data: {
@@ -182,19 +183,37 @@
           options: { responsive: true, maintainAspectRatio: false },
         });
 
+        // 全ユーザー支出収入比較（複数棒グラフ）
         new Chart(document.getElementById("userBarChart"), {
           type: "bar",
           data: {
             labels: ["ユーザー1", "ユーザー2", "ユーザー3", "ユーザー4"],
             datasets: [
               {
-                label: "支出額 (円)",
+                label: "支出合計 (円)",
                 data: [140000, 135000, 85000, 60000],
-                backgroundColor: "rgba(54, 162, 235, 0.7)",
+                backgroundColor: "rgba(255, 99, 132, 0.7)", // 支出は赤系
+                borderColor: "rgb(255, 99, 132)",
+                borderWidth: 1,
+              },
+              {
+                label: "収入合計 (円)",
+                data: [290000, 192000, 175000, 101000],
+                backgroundColor: "rgba(75, 192, 192, 0.7)", // 収入は緑系
+                borderColor: "rgb(75, 192, 192)",
+                borderWidth: 1,
               },
             ],
           },
-          options: { responsive: true, maintainAspectRatio: false },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
         });
       };
 
