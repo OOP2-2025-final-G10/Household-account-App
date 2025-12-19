@@ -59,10 +59,15 @@ def calc_category_percentage(user_id, categories, records, is_income):
     Returns:
         dict[str, float]: カテゴリ名をキー、割合（%）を値とする辞書
     """
-    records = records.where(
-        (Record.user == user_id) &
-        (Record.category.classification == is_income)
+    records = (
+        records
+        .join(Category)
+        .where(
+            (Record.user == user_id) &
+            (Category.classification == is_income)
+        )
     )
+
 
     category_totals = {}
     total_amount = 0
