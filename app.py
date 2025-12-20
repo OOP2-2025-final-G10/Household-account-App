@@ -13,160 +13,87 @@ initialize_database()
 current_user_id = 1
 current_month = '2025-12'
 
-
 for blueprint in blueprints:
     app.register_blueprint(blueprint)
 
 @app.route('/')
 def index():
+    # クエリパラメータから表示月を取得
     month = request.args.get('month', current_month)
 
     users = User.select()
     categories = Category.select()
     records = Record.select()
 
-    month_records = filter_records_by_month(current_user_id, records, month)
+    # --- 全ユーザーの統計データを集計 ---
+    all_user_data = {}
+    for u in users:
+        # ユーザー×月のレコード抽出
+        u_month_records = filter_records_by_month(u.id, records, month)
+        
+        # 円グラフ用：カテゴリ別割合
+        u_income_pct = calc_category_percentage(u.id, categories, u_month_records, is_income=True)
+        u_payment_pct = calc_category_percentage(u.id, categories, u_month_records, is_income=False)
+        
+        # 棒グラフ用：合計金額
+        u_total_income = calc_total_by_classification(u.id, u_month_records, is_income=True)
+        u_total_payment = calc_total_by_classification(u.id, u_month_records, is_income=False)
 
-    category_percentage_income = calc_category_percentage(current_user_id, categories, month_records, is_income=True)
-    category_percentage_payment = calc_category_percentage(current_user_id, categories, month_records, is_income=False)
-    total_income = calc_total_by_classification(current_user_id, month_records, is_income=True)
-    total_payment = calc_total_by_classification(current_user_id, month_records, is_income=False)
-    daily_income_payment = calc_daily_income_payment(current_user_id, month_records)
+        all_user_data[u.id] = {
+            'name': u.name,
+            'income_pct': u_income_pct,
+            'payment_pct': u_payment_pct,
+            'total_income': u_total_income,
+            'total_payment': u_total_payment
+        }
 
     return render_template(
         'index.html',
         title='ホーム',
         users=users,
-        categories=categories,
-        records=records,
-        category_percentage=json.dumps(category_percentage_income),
-        category_percentage_payment=json.dumps(category_percentage_payment),
-        total_income=total_income,
-        total_payment=total_payment,
-        daily_income_payment=json.dumps(daily_income_payment)
+        current_month=month,
+        # JSON形式でHTML側のJavaScriptに渡す
+        all_user_data_json=json.dumps(all_user_data)
     )
 
 def calc_category_percentage(user_id, categories, records, is_income):
-    """
-    ユーザーごとのカテゴリ別収入または支出割合を計算します。
-
-    Args:
-        user_id (int): 対象ユーザーID
-        categories (Iterable[Category]): 全カテゴリ
-        records (Iterable[Record]): 対象月のレコード
-        is_income (bool): True=収入, False=支出
-
-    Returns:
-        dict[str, float]: カテゴリ名をキー、割合（%）を値とする辞書
-    """
-    records = (
-        records
-        .join(Category)
-        .where(
-            (Record.user == user_id) &
-            (Category.classification == is_income)
-        )
-    )
-
+    # 特定ユーザーと収支区分でフィルタ
+    filtered_records = [
+        r for r in records 
+        if r.user_id == user_id and r.category.classification == is_income
+    ]
 
     category_totals = {}
     total_amount = 0
 
     for cat in categories:
-        # classification が一致しないカテゴリは除外
         if cat.classification != is_income:
             continue
+        
+        cat_total = sum(r.price for r in filtered_records if r.category_id == cat.id)
+        if cat_total > 0:
+            category_totals[cat.name] = cat_total
+            total_amount += cat_total
 
-        cat_records = [
-            r for r in records
-            if r.category == cat
-        ]
-
-        cat_total = sum(r.price for r in cat_records)
-        category_totals[cat.name] = cat_total
-        total_amount += cat_total
-
+    # 割合の計算
     category_percentages = {}
     for name, amount in category_totals.items():
-        category_percentages[name] = (
-            (amount / total_amount) * 100 if total_amount > 0 else 0
-        )
+        category_percentages[name] = round((amount / total_amount) * 100, 1) if total_amount > 0 else 0
 
     return category_percentages
 
-
 def calc_total_by_classification(user_id, records, is_income):
-    """
-    収入または支出の合計金額を計算します。
-    
-    Args:
-        user_id (int): 対象ユーザーID
-        records (Iterable[Record]): 全レコード
-        is_income (bool): True=収入, False=支出
-    
-    Returns:
-        int | float: 合計金額
-    """
-    total = 0
-
-    for record in records:
-        if record.user_id != user_id:
-            continue
-
-        if record.category.classification == is_income:
-            total += record.price
-
+    total = sum(r.price for r in records if r.user_id == user_id and r.category.classification == is_income)
     return total
-
-def calc_daily_income_payment(user_id, records):
-    """
-    日付ごとの収入・支出を集計します。
-
-    Args:
-        user_id (int): 対象ユーザーID
-        records (Iterable[Record]): 全レコード
-
-    Returns:
-        dict[date, dict]:
-        {
-            date: {
-            'income': 金額,
-            'payment': 金額
-            }
-        }
-    """
-    records = records.where(Record.user == user_id)
-
-    daily_data = {}
-
-    for record in records:
-        day_str = record.date.strftime('%Y-%m-%d')
-
-        if day_str not in daily_data:
-            daily_data[day_str] = {
-                'income': 0,
-                'payment': 0
-            }
-
-        if record.category.classification:
-            daily_data[day_str]['income'] += record.price
-        else:
-            daily_data[day_str]['payment'] += record.price
-
-    return daily_data
 
 def filter_records_by_month(user_id, records, month_str):
     year, month = map(int, month_str.split('-'))
     last_day = monthrange(year, month)[1]
-
     start_date = date(year, month, 1)
     end_date = date(year, month, last_day)
+    return records.where((Record.user == user_id) & (Record.date.between(start_date, end_date)))
 
-    return records.where(
-        (Record.user == user_id) &
-        (Record.date.between(start_date, end_date))
-    )
-
+# テンプレートフィルタ
 @app.template_filter('prev_month')
 def prev_month(month_str):
     dt = datetime.strptime(month_str, '%Y-%m')
